@@ -1,0 +1,51 @@
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
+
+services:
+
+  frontend:
+    image: nginx:latest
+    container_name: frontend
+    ports:
+      - "8081:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+
+  backend:
+    image: node:18
+    container_name: backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: sh -c "npm install && node server.js"
+    restart: always
+    ports:
+      - "8085:5000"
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+
+  db:
+    image: mysql:5.7
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+    ports:
+      - "8090:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
