@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Compose Demo</title>
+</head>
+<body>
+    <h2>Frontend Service Running</h2>
+
+    <button onclick="loadData()">Get Data from Backend</button>
+
+    <p id="data"></p>
+
+<script>
+function loadData() {
+  fetch('http://localhost:5000/data')
+  .then(res => res.json())
+  .then(data => {
+      document.getElementById("data").innerText = data.message;
+  });
+}
+</script>
+
+</body>
+</html>
+
